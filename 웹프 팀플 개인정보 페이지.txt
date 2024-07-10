@@ -1,0 +1,111 @@
+<%@ page contentType="text/html;charset=EUC-KR" import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%
+Class.forName("com.mysql.cj.jdbc.Driver");
+Connection conn = null;
+Statement stmt = null;
+ResultSet rs = null;
+String name = "", phone = "", email = "", grade = "";
+String crtid = "", mrname = "", mrTIME = "",trNum = "",stNum = "",Rnumber = "";
+int counter = 0;
+try {
+conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "0000");
+stmt = conn.createStatement();
+rs = stmt.executeQuery("select * from customer, reservationinfor");
+
+
+%>
+<html>
+<head>
+<title>회원정보 페이지</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body bgcolor="#FFFFCC">
+<h2>예매정보 확인</h2><br/>
+<h3>회원정보</h3>
+<table bordercolor="#0000ff" border="1">
+<tr>
+<td><strong>성명</strong></td>
+<td><strong>이메일</strong></td>
+<td><strong>등급</strong></td>
+</tr>
+<%
+if( rs != null ) {
+while( rs.next() ) {
+name = rs.getString("ctName");
+email = rs.getString("email");
+grade = rs.getString("GRADE");
+
+
+%>
+<tr>
+<td><%=name%></td>
+<td><%=email%></td>
+<td><%=grade%></td>
+</tr>
+<%
+counter++;
+}//end while
+}//end if
+%>
+</table>
+<h4>예약정보</h4>
+<table bordercolor="#0000ff" border="1">
+<tr>
+<td><strong>아이디</strong></td>
+<td><strong>영화제목</strong></td>
+<td><strong>러닝타임</strong></td>
+<td><strong>상영관번호</strong></td>
+<td><strong>좌석번호</strong></td>
+<td><strong>예약번호</strong></td>
+</tr>
+<%
+if( rs != null ) {
+while( rs.next() ) {
+crtid = rs.getString("crtid");
+mrname = rs.getString("mrname");
+mrTIME = rs.getString("mrTIME");
+trNum = rs.getString("trNum");
+mrTIME = rs.getString("mrTIME");
+stNum = rs.getString("stNum");
+Rnumber = rs.getString("Rnumber");
+
+%>
+<tr>
+<td><%=crtid%></td>
+<td><%=mrname%></td>
+<td><%=mrTIME%></td>
+<td><%=trNum%></td>
+<td><%=mrTIME%></td>
+<td><%=stNum%></td>
+<td><%=Rnumber%></td>
+</tr>
+<%
+counter++;
+}//end while
+}//end if
+%>
+</table>
+
+
+<br/>
+<% 
+//total records :<%=counter%>
+
+<%
+} catch( SQLException sqlException ) {
+System.out.println("sql exception");
+} catch( Exception exception ) {
+System.out.println("exception");
+} finally {
+if( rs != null )
+try { rs.close(); } 
+catch( SQLException ex ) {}
+if( stmt != null )
+try { stmt.close(); } 
+catch( SQLException ex ) {}
+if( conn != null )
+try { conn.close(); } 
+catch( Exception ex ) {}
+}
+%>
